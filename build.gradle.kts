@@ -1,9 +1,9 @@
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "4.0.0"
+	kotlin("jvm") version "2.2.0"
+	kotlin("plugin.spring") version "2.2.0"
+	kotlin("plugin.jpa") version "2.2.0"
+	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
-	kotlin("plugin.jpa") version "1.9.25"
 }
 
 group = "com.pucetec"
@@ -21,16 +21,17 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
+	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	runtimeOnly("org.postgresql:postgresql")
 }
 
 kotlin {
@@ -47,4 +48,8 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+springBoot {
+	mainClass.set("com.pucetec.exam2.Exam2ApplicationKt")
 }
