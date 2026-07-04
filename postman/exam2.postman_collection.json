@@ -1,0 +1,110 @@
+{
+  "info": {
+    "name": "exam2 - Parking Cognito",
+    "description": "Coleccion para el microservicio exam2 (parking, PUCE). Incluye endpoint publico (sin token) y privados (con Bearer token de Cognito).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8788" },
+    { "key": "access_token", "value": "PEGA_AQUI_TU_ACCESS_TOKEN" }
+  ],
+  "item": [
+    {
+      "name": "01 - Publico - GET espacios disponibles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/api/spaces/available", "host": ["{{base_url}}"], "path": ["api", "spaces", "available"] }
+      }
+    },
+    {
+      "name": "02 - Privado - POST registrar entrada (con token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"plate\": \"ABC-123\",\n  \"spaceId\": 1\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tickets/entry", "host": ["{{base_url}}"], "path": ["api", "tickets", "entry"] }
+      }
+    },
+    {
+      "name": "03 - Privado - POST registrar entrada SIN token (debe dar 401)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"plate\": \"ABC-123\",\n  \"spaceId\": 1\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tickets/entry", "host": ["{{base_url}}"], "path": ["api", "tickets", "entry"] }
+      }
+    },
+    {
+      "name": "04 - Privado - POST entrada con espacio inexistente (debe dar 404)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"plate\": \"ABC-123\",\n  \"spaceId\": 9999\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tickets/entry", "host": ["{{base_url}}"], "path": ["api", "tickets", "entry"] }
+      }
+    },
+    {
+      "name": "05 - Privado - POST entrada en espacio ya ocupado (debe dar 409)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"plate\": \"XYZ-999\",\n  \"spaceId\": 1\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tickets/entry", "host": ["{{base_url}}"], "path": ["api", "tickets", "entry"] }
+      }
+    },
+    {
+      "name": "06 - Privado - PUT registrar salida (con token)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/tickets/1/exit", "host": ["{{base_url}}"], "path": ["api", "tickets", "1", "exit"] }
+      }
+    },
+    {
+      "name": "07 - Privado - PUT salida con ticket inexistente (debe dar 404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/tickets/9999/exit", "host": ["{{base_url}}"], "path": ["api", "tickets", "9999", "exit"] }
+      }
+    },
+    {
+      "name": "08 - Privado - PUT salida de ticket ya cerrado (debe dar 409)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/tickets/1/exit", "host": ["{{base_url}}"], "path": ["api", "tickets", "1", "exit"] }
+      }
+    }
+  ]
+}
